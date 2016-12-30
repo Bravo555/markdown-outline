@@ -1,3 +1,6 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
 import sys
 
 class Header():
@@ -61,4 +64,4 @@ if __name__ == '__main__':
         document = f.readlines()
     
     outline = get_outline(document)
-    print(prettify(outline[0]))
+    prettify(outline[0])
