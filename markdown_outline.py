@@ -6,14 +6,15 @@ class Header():
         self.level = level
 
     def __repr__(self):
-        return "'{}': {}".format(self.text, str(self.children))
+        return '"{}": {}'.format(self.text, str(self.children))
 
     def add_child(self, child):
         self.children.append(child)
         child.parent = self
+        return child
 
 def get_outline(document):
-    outline = Header('<NO ROOT>', 1)
+    outline = Header('<ROOT>', 0)
     current_header = outline
     for line in document:
         if line.startswith('#'):
@@ -22,18 +23,22 @@ def get_outline(document):
 
             if header_level > current_header.level:
                 if header_level > current_header.level + 1:
-                    for expected_header_level in range(header_level - current_header.level):
-                        child = Header('<NO LEVEL ' + str(expected_header_level + 1) + ' HEADER>',
-                            current_header.level + 1)
-                        current_header.add_child(child)
-                        current_header = child
+                    for expected_header_level in range(current_header.level + 1, header_level):
+                        current_header = current_header.add_child(child = Header('<NO LEVEL ' + str(expected_header_level) + ' HEADER>',
+                            current_header.level))
+
+                current_header = current_header.add_child(Header(text, header_level))
+
+            elif header_level == current_header.level:
+                current_header.parent.add_child(Header(text, header_level))
+                
+            elif header_level < current_header.level:
+                for expected_header_level in range(current_header.level - 1, header_level - 2, -1):
+                    current_header = current_header.parent
                 current_header.add_child(Header(text, header_level))
 
-
-
-
-    return outline
+    return outline.children
 
 if __name__ == '__main__':
-    doc = ['### h3 boi']
+    doc = ['# h1 boi', '### h3 boi', '### h3 boi', '## h2 boi']
     outline = get_outline(doc)
