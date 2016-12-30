@@ -1,3 +1,5 @@
+import sys
+
 class Header():
     def __init__(self, text, level, children = None):
         self.text = text
@@ -39,6 +41,24 @@ def get_outline(document):
 
     return outline.children
 
+def prettify(outline, level=0):
+    if level == 0:
+        print(outline.text)
+    elif level > 0:
+        print(' ' * (level - 1) * 2 + '˫', outline.text)
+    if outline.children:
+        for header in outline.children:
+            prettify(header, level+1)
+
 if __name__ == '__main__':
-    doc = ['# h1 boi', '### h3 boi', '### h3 boi', '## h2 boi']
-    outline = get_outline(doc)
+    if len(sys.argv) < 2:
+        print('Usage: python3 document.md')
+        sys.exit()
+    
+    filepath = sys.argv[1]
+    
+    with open(filepath, 'r') as f:
+        document = f.readlines()
+    
+    outline = get_outline(document)
+    print(prettify(outline[0]))
