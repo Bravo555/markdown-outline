@@ -1,7 +1,7 @@
 class Header():
-    def __init__(self, text, level, children=[]):
+    def __init__(self, text, level, children = None):
         self.text = text
-        self.children = children
+        self.children = [] if children is None else children
         self.parent = None
         self.level = level
 
@@ -10,14 +10,10 @@ class Header():
 
     def add_child(self, child):
         self.children.append(child)
-        return 0
-
-        # child.parent = self
-
-
+        child.parent = self
 
 def get_outline(document):
-    outline = Header('<NO HEADER>', 0)
+    outline = Header('<NO ROOT>', 1)
     current_header = outline
     for line in document:
         if line.startswith('#'):
@@ -25,12 +21,13 @@ def get_outline(document):
             text = ' '.join(line.split()[1:])
 
             if header_level > current_header.level:
-                for expected_header_level in range(header_level - current_header.level - 1):
-                    child = Header('<NO LEVEL ' + str(expected_header_level + 1) + ' HEADER>',
-                        current_header.level + 1)
-                    current_header = current_header.add_child()
-
-                current_header = current_header.add_child(Header(text, header_level))
+                if header_level > current_header.level + 1:
+                    for expected_header_level in range(header_level - current_header.level):
+                        child = Header('<NO LEVEL ' + str(expected_header_level + 1) + ' HEADER>',
+                            current_header.level + 1)
+                        current_header.add_child(child)
+                        current_header = child
+                current_header.add_child(Header(text, header_level))
 
 
 
