@@ -35,12 +35,12 @@ def get_outline(document):
                 current_header = current_header.add_child(Header(text, header_level))
 
             elif header_level == current_header.level:
-                current_header.parent.add_child(Header(text, header_level))
+                current_header = current_header.parent.add_child(Header(text, header_level))
                 
             elif header_level < current_header.level:
                 for expected_header_level in range(current_header.level - 1, header_level - 2, -1):
                     current_header = current_header.parent
-                current_header.add_child(Header(text, header_level))
+                current_header = current_header.add_child(Header(text, header_level))
 
     return outline.children
 
