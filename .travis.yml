@@ -7,4 +7,4 @@ addons:
     code_climate:
         repo_token: 8e082865964ccd108f3ebb080900055fdda5df4763d6b4f08b3872aa8ef6b0e4
 
-script: pip install . && cd markdown_outline/tests && nosetests
+script: pip install . && cd markdown_outline/tests && nosetests --with-coverage --cover-erase --cover-package=markdown_outline && codeclimate-test-reporter
