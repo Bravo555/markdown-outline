@@ -1,0 +1,16 @@
+#!/usr/bin/python3
+
+import sys
+from markdown_outline import *
+
+if len(sys.argv) < 2:
+    print('Usage: python3 document.md')
+    sys.exit()
+
+filepath = sys.argv[1]
+
+with open(filepath, 'r') as f:
+    document = f.readlines()
+
+outline = get_outline(document)
+prettify(outline[0])
